@@ -21,7 +21,12 @@ public class InfixCalculator {
     }
     // result getter
     public int getResult() {
+
+        if(!isValid) {
+            return -1;
+        }
         return inputResult;
+
     }
     // valid getter
     public boolean getValid() {
@@ -60,7 +65,7 @@ public class InfixCalculator {
 
                 // perform calculation
                 temp = Integer.parseInt(numList.get(i));
-
+                // operations based on the user input
                 switch(opList.get(i - 1)) {
                     case '+': result += temp; break;
                     case '-': result -= temp; break;
@@ -84,10 +89,11 @@ public class InfixCalculator {
         LinkedList<String> numList = new LinkedList<String>();
         LinkedList<Character> opList = new LinkedList<Character>();
 
-        // for in bracket // under construction
+        // in bracket variable declaration
         Queue<Character> queueInside = new LinkedList<Character>();
         StringBuilder insideSb = new StringBuilder();
         boolean flagOpenBracket = false;
+        int bracketCounter = 0;
 
         for(int i = 0; i < userInput.length(); i++) {
 
@@ -98,35 +104,75 @@ public class InfixCalculator {
 
             // return if the input is invalid
             if(!Character.isDigit(currentChar) && (currentChar != '+' && currentChar != '-' && currentChar != '*' && currentChar != '/' && currentChar != '(' && currentChar != ')')) {
-                System.out.println("Failed");
                 setValidInput(false);
                 return -1;
             }
 
-            // check if the number is a digit
-            if(Character.isDigit(currentChar)) {
-                queueNum.add(currentChar);
-            }
+            // check if the open bracket flag is activated
+            if(!flagOpenBracket) {
 
-            // check if the current character is an operation
-            if(currentChar == '+' || currentChar == '-' || currentChar == '*' || currentChar == '/' || i == (userInput.length() - 1)) {
-                
-                if(i != (userInput.length() - 1)) {
-                    // add operator into the list
-                    opList.add(currentChar);
+                // detect if current input is an open bracket
+                if(currentChar == '(') {
+    
+                    flagOpenBracket = true;
+                    bracketCounter++;
+                    continue;
                 }
-    
-                while(!queueNum.isEmpty()) {
-                    sb.append(queueNum.poll());
+                // check if the number is a digit
+                if(Character.isDigit(currentChar)) {
+                    queueNum.add(currentChar);
                 }
-    
-                numList.add(sb.toString());
-    
-                sb.setLength(0);
-            }
+                // check if the current character is an operation
+                if(currentChar == '+' || currentChar == '-' || currentChar == '*' || currentChar == '/' || i == (userInput.length() - 1)) {
+                    
+                    if(i != (userInput.length() - 1)) {
+                        // add operator into the list
+                        opList.add(currentChar);
+                    }
+                    // append all characters into the string builder
+                    while(!queueNum.isEmpty()) {
+                        sb.append(queueNum.poll());
+                    }
+                    // add the string into the numlist
+                    numList.add(sb.toString());
+                    // reset the string builder
+                    sb.setLength(0);
+                }
 
+            } else {
+
+                // count the open bracket
+                // increase in open bracket cause more recursion
+                if(currentChar == '(') {
+                    bracketCounter++;
+                } else if(currentChar == ')') {
+                    bracketCounter--;
+                }
+                // exclude the last close bracket
+                if(bracketCounter != 0) {
+                    queueInside.add(currentChar);
+                }
+                // check if the bracket counter is last then proceed to calculation
+                if(bracketCounter == 0) {
+                    // append all inside bracker characters into the string builder
+                    while(!queueInside.isEmpty()) {
+                        insideSb.append(queueInside.poll());
+                    }
+                    // get the result recursively
+                    String res = Integer.toString(calculateInput(insideSb.toString()));
+                    // add the result into the numlist
+                    numList.add(res);
+                    // flag false the open bracket to perform calculation
+                    flagOpenBracket = false;
+
+                }
+                // check if the input is the last but still bracketcount is not null
+                if(i == userInput.length() && bracketCounter != 0) {
+                    setValidInput(false);
+                    return -1;
+                }
+            }
         }
-        
         return calculation(numList, opList);
     }
 
