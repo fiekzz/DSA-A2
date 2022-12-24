@@ -20,13 +20,11 @@ public class InfixCalculator {
         this.inputResult = inputResult;
     }
     // result getter
-    public int getResult() {
-
+    public String getResult() {
         if(!isValid) {
-            return -1;
+            return "Invalid input";
         }
-        return inputResult;
-
+        return Integer.toString(inputResult);
     }
     // valid getter
     public boolean getValid() {

@@ -13,12 +13,7 @@ public class Main {
         InfixCalculator test1 = new InfixCalculator(userInput);
 
         // check if the input is valid
-        if(test1.getValid()) {
-            System.out.println("Output of your expression: " + test1.getResult());
-        } else {
-            System.out.println("Invalid input");
-        }
-
+        System.out.println("Output: " + test1.getResult());
 
 
         input.close();

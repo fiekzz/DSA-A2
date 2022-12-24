@@ -2,7 +2,6 @@
 
 Still in beta
 
-To do:
-- bracket system
-  - prefer to use recursion
-- documentation
+- Bracket function using recursive
+- Need testing
+- Update to 01155046571 (fikri)
