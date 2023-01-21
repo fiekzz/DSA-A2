@@ -2,74 +2,95 @@ import java.util.*;
 
 public class PostfixConverter {
 
+    // declaring List of String
+    private List<String> postFixStringN;
+
+    // calculate the converter
     public void calculate(String s) {
         List<String> postFixString = getPostFixString(s);
         this.postFixStringN = postFixString;
     }
     
-    private List<String> postFixStringN;
-
-    private int getPreference(char c){
+    // get the operator rank
+    private int calculateOperatorRank(char c){
         if(c=='+'|| c=='-') return 1;
         else if(c=='*' || c=='/') return 2;
         else return -1;
     }
 
+    // convert the infix to postfix
     private List<String> getPostFixString(String s){
-        Stack<Character> stack = new Stack<>();
-        List<String> postFixList = new ArrayList<>();
+
+        // declaring stack
+        Stack<Character> stack = new Stack<Character>();
+        // declaring postfix list of String
+        List<String> postFixList = new ArrayList<String>();
+        // declaring the flag
         boolean flag = false;
-        for(int i=0;i<s.length();i++){
-            char word = s.charAt(i);
-            if(word==' '){
+
+        // iterate each character of the string
+        for(int i = 0; i < s.length(); i++){
+
+            // get the current character
+            char currentChar = s.charAt(i);
+
+            // skip if a space is found
+            if(currentChar == ' '){
                 continue;
             }
-            if(word=='('){
-                stack.push(word);
+            if(currentChar == '('){
+                // push the char into the stack
+                stack.push(currentChar);
                 flag = false;
-            }else if(word==')'){
+            }else if(currentChar == ')'){
                 flag = false;
+                // pop every char inside the bracket
                 while(!stack.isEmpty()){
-                    if(stack.peek()=='('){
+                    if(stack.peek() == '('){
                         stack.pop();
                         break;
                     }else{
-                        postFixList.add(stack.pop()+"");
+                        postFixList.add(stack.pop() + "");
                     }
                 }
-            }else if(word=='+' || word=='-' || word=='*' || word=='/'){
+            }else if(currentChar == '+' || currentChar == '-' || currentChar == '*' || currentChar == '/'){
                 flag = false;
                 if(stack.isEmpty()){
-                    stack.push(word);
+                    stack.push(currentChar);
                 }
                 else{
-                    while(!stack.isEmpty() && getPreference(stack.peek())>=getPreference(word)){
+                    // check if the operation rank is higher
+                    while(!stack.isEmpty() && calculateOperatorRank(stack.peek())>=calculateOperatorRank(currentChar)){
                         postFixList.add(stack.pop()+"");
                     }
-                    stack.push(word);
+                    // push into the stack
+                    stack.push(currentChar);
                 }
             }else{
                 if(flag){
                     String lastNumber = postFixList.get(postFixList.size()-1);
-                    lastNumber+=word;
+                    lastNumber+=currentChar;
                     postFixList.set(postFixList.size()-1, lastNumber);
                 }else
-                postFixList.add(word+"");
+                postFixList.add(currentChar + "");
                 flag = true;
             }
         }
+        // pop all the stack into the postfix list
         while(!stack.isEmpty()){
             postFixList.add(stack.pop()+"");
         }
+
         return postFixList;
     }
 
+    // get the string postfix list
     public List<String> getStringPostfixList() {
 
         return postFixStringN;
 
     }
-
+    // get the string postfix list in the string format
     public String getStringPostFix() {
 
         StringBuilder builder = new StringBuilder();
