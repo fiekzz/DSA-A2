@@ -4,22 +4,19 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Scanner input = new Scanner(System.in);
-
-        String userInput = "1+2*6"; // testing purposes
+        String[] strArr = {"1+2", "a+b", "1+2*6", "(1+2)*6", "(1+2*6"};
         
-        Solution inputSolution = new Solution();
+        for(int i = 0; i < strArr.length; i++) {
 
-        inputSolution.calculate(userInput);
+            PostfixConverter converter = new PostfixConverter();
 
-        String res = inputSolution.getStringPostFix();
+            converter.calculate(strArr[i]);
 
-        CalculatePostfix calc = new CalculatePostfix(res);
+            CalculatePostfix calcPostfix = new CalculatePostfix(converter.getStringPostFix());
 
-        System.out.println(calc.getValid() ? calc.getResult() : "Invalid input");
+            System.out.println(calcPostfix.getResult());
 
-
-        input.close();
+        }
 
     }
 
