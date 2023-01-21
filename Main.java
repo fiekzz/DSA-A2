@@ -6,14 +6,17 @@ public class Main {
 
         Scanner input = new Scanner(System.in);
 
-        System.out.print("Enter an arithmetic expression: ");
-        String userInput = input.nextLine();
+        String userInput = "1+2*6"; // testing purposes
+        
+        Solution inputSolution = new Solution();
 
-        // String userInput = "3+3*(1+1-3-(2+2))"; // testing purposes
-        InfixCalculator test1 = new InfixCalculator(userInput);
+        inputSolution.calculate(userInput);
 
-        // check if the input is valid
-        System.out.println("Output: " + test1.getResult());
+        String res = inputSolution.getStringPostFix();
+
+        CalculatePostfix calc = new CalculatePostfix(res);
+
+        System.out.println(calc.getValid() ? calc.getResult() : "Invalid input");
 
 
         input.close();
