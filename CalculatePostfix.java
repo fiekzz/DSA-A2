@@ -1,95 +1,91 @@
-import java.util.Stack;
+import java.util.*;
 
 public class CalculatePostfix {
     
-    private Stack<String> postfixStack = new Stack<String>();
-
+    // property initialization
     private String inputPostfix;
     private int result;
     private boolean validCalc = true;
-
+    // calculation constructor
     CalculatePostfix(String inputPostfix) {
         inputPostfixSetter(inputPostfix);
         resultSetter();
     }
-
+    // set the input postfix
     private void inputPostfixSetter(String inputPostfix) {
         this.inputPostfix = inputPostfix;
     }
-
+    // set the validator
     private void validSetter(boolean setValid) {
         this.validCalc = setValid;
     }
-
+    // set the result
     private void resultSetter() {
-        this.result = calculate();
+        this.result = calculation();
     }
+    // get the result
+    public String getResult() {
 
-    public int getResult() {
-        return result;
+        if(getValid()) return Integer.toString(result);
+
+        return "Invalid input";
+            
     }
-
+    // get the validator
     public boolean getValid() {
         return validCalc;
     }
-
+    // get the input postfix
     public String getInputPostfix() {
         return inputPostfix;
     }
-
-    private int calculate() {
-
-        int res = 0;
-
+    // calculation method
+    private int calculation() {
+        // initialize the stack
         Stack<String> topStack = new Stack<String>();
-
-        StringBuilder builder = new StringBuilder();
+        // initialize result
+        int res;
 
         try {
-            for(int i = 0; i < inputPostfix.length(); i++) {
+            
+            // split the postfix input into array of string
+            String splits[] = inputPostfix.split(" ");
 
-                char ch = inputPostfix.charAt(i);
-
-                builder.append(ch);
-
-                if(ch == ' ' && Character.isDigit(builder.toString().charAt(0))) {
-
-                    builder.setLength(builder.length() - 1);
-                    topStack.push(builder.toString());
-                    builder.setLength(0);
-
-                }
-
-                if(ch == '+' || ch == '-' || ch == '*' || ch == '/') {
-
-                    double num1 = (double) Integer.parseInt(String.valueOf(topStack.pop()));
-                    double num2 = (double) Integer.parseInt(String.valueOf(topStack.pop()));
-
-                    switch(ch) {
-                        case '+': res = (int)(num2 + num1); break;
-                        case '-': res = (int)(num2 - num1); break;
-                        case '*': res = (int)(num2 * num1); break;
-                        case '/': res = (int)(num2 / num1); break;
+            // iterate until the end of string array
+            for(int i = 0; i < splits.length; i++) {
+                // take the current string
+                String currentString = splits[i];
+                // push the string into the top of stack
+                topStack.push(currentString);
+                // check if the input is not a digit
+                if(!Character.isDigit(topStack.peek().charAt(0))) {
+                    // take the operation
+                    String op = topStack.pop();
+                    // take the number stored from the stack
+                    int num1 = Integer.parseInt(topStack.pop());
+                    int num2 = Integer.parseInt(topStack.pop());
+                    // determine the operation
+                    switch(op) {
+                        case "+": res = num2 + num1; break; // addition
+                        case "-": res = num2 - num1; break; // substraction
+                        case "*": res = num2 * num1; break; // multiplication
+                        case "/": res = num2 / num1; break; // division
+                        default: res = -1; //throw new java.lang.Error("Invalid input!"); // throw the exception if the input is invalid
                     }
-
+                    // push the result into the top of stack
                     topStack.push(Integer.toString(res));
-
-                    builder.setLength(0);
-                    
                 }
-
             }
+            // catch the exception
         } catch (Exception e) {
-            validSetter(false);
-            return -1;
+            validSetter(false); // set the valid to false
+            // System.out.println(e); // print out the exception error
+            return -1; // return -1 indicates an error has occured
         }
-
+        // return the result from the top of stack
         return Integer.parseInt(topStack.pop());
 
     }
 
-    public void displayPostfixStack() {
-        System.out.println(postfixStack);
-    }
-
+    
 }
