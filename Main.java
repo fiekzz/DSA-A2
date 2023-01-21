@@ -1,18 +1,20 @@
-import java.util.Scanner;
-
 public class Main {
 
     public static void main(String[] args) {
 
-        Scanner input = new Scanner(System.in);
+        String[] strArr = {"1+2", "a+b", "1+2*6", "(1+2)*6", "(1+2*6"};
+        
+        for(int i = 0; i < strArr.length; i++) {
 
-        System.out.print("Enter an arithmetic expression: ");
-        String userInput = input.nextLine();
-        InfixCalculator test1 = new InfixCalculator(userInput);
-        System.out.println(test1.getResult());
+            PostfixConverter converter = new PostfixConverter();
 
+            converter.calculate(strArr[i]);
 
-        input.close();
+            CalculatePostfix calcPostfix = new CalculatePostfix(converter.getStringPostFix());
+
+            System.out.println(calcPostfix.getResult());
+
+        }
 
     }
 
