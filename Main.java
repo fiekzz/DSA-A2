@@ -8,6 +8,10 @@ public class Main {
         // declaring converter variable
         PostfixConverter converter = new PostfixConverter();
 
+        System.out.printf("-----------------------------------------%n");
+        System.out.printf("|       Input       |       Output      |%n");
+        System.out.printf("-----------------------------------------%n");
+
         // iterate each question
         for(int i = 0; i < strArr.length; i++) {
 
@@ -18,10 +22,12 @@ public class Main {
             CalculatePostfix calcPostfix = new CalculatePostfix(converter.getStringPostFix());
 
             // display the result
-            System.out.println(calcPostfix.getResult());
+            System.out.printf("| %-18s| %-18s|%n", strArr[i], calcPostfix.getResult());
+            // System.out.println(calcPostfix.getResult());
 
         }
 
+        System.out.printf("-----------------------------------------%n");
     }
 
 }
